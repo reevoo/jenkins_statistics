@@ -1,14 +1,13 @@
 require 'json'
 require 'net/http'
-require './data_fetcher'
-require './data_fetcher'
-require './dashboard_updater'
+require './lib/data_fetcher'
+require './lib/dashboard_updater'
 
-require './reports/ci_report_base'
-require './reports/ci_average_durration_report'
-require './reports/ci_flaky_tests_report'
-require './reports/ci_slowest_tests_report'
-require './reports/ci_time_broken_report'
+require './lib/reports/ci_report_base'
+require './lib/reports/ci_average_durration_report'
+require './lib/reports/ci_flaky_tests_report'
+require './lib/reports/ci_slowest_tests_report'
+require './lib/reports/ci_time_broken_report'
 
 class JenkinsStatistics
   
@@ -34,5 +33,3 @@ class JenkinsStatistics
     end
   end
 end
-
-JenkinsStatistics.generate
