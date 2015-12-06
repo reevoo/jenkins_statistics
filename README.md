@@ -15,7 +15,7 @@ This application retrives data about builds from jenkins, analizes them and it c
 ## Installation
 
 ```ruby
-bundle install
+$ bundle install
 ```
 
 ## Usage
