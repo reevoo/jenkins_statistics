@@ -28,8 +28,7 @@ $ bundle exec update_dashboard
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ionut998/jenkins_statistics. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/ionut998/jenkins_statistics.
 
 ## License
 
