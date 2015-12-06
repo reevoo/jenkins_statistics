@@ -1,6 +1,11 @@
 # Jenkins Statistics
 
 [![Build Status](https://travis-ci.org/ionut998/jenkins_statistics.svg?branch=master)](https://travis-ci.org/ionut998/jenkins_statistics)
+[![Code Climate](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/gpa.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics)
+[![Test Coverage](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/coverage.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics/coverage)
+[![Issue Count](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/issue_count.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics)
+
+
 
 Application for gathering and displaying statistical data about jenkins project builds.
 
