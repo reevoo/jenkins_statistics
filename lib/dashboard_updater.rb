@@ -7,11 +7,16 @@ class DashboardUpdater
     @data = data
   end
 
-  def update
-    uri = URI("http://0.0.0.0:3030/widgets/#{dashboard_id}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
-    req.body = { "auth_token" => "TOKEN_1"}.merge(data).to_json
+  def update    
+    http = Net::HTTP.new(url.host, url.port)
+    req = Net::HTTP::Post.new(url.path, initheader = {'Content-Type' =>'application/json'})
+    req.body = { "auth_token" => ENV.fetch('DASHBOARD_AUTH_TOKEN')}.merge(data).to_json
     http.request(req)
+  end
+
+  private
+
+  def url
+    URI(ENV.fetch('DASHBOARD_URL') + dashboard_id)
   end
 end
