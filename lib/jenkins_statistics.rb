@@ -1,5 +1,6 @@
 require 'json'
 require 'net/http'
+require './lib/dotenv'
 require './lib/data_fetcher'
 require './lib/dashboard_updater'
 
