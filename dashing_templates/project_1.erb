@@ -1,0 +1,25 @@
+<% content_for :title do %>Project 1<% end %>
+<div class="gridster">
+  <ul>
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+      <div data-id="project_1-overall-info" data-view="Text" data-title="Project 1"></div>
+    </li>
+
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="project_1-passing-rate" data-view="Meter" data-title="Passing rate" data-height="200" data-width="200" data-min="0" data-max="100" data-suffix="%"></div>
+    </li>
+
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="project_1-time-green-red" data-view="Text" style="background-color:#47bbb3;"></div>
+    </li>
+
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+      <div data-id="slow-tests-project_1" data-view="List" data-unordered="true" data-title="Slow tests" data-moreinfo="# time taken for test to complete"></div>
+    </li>
+
+
+    <li data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+      <div data-id="flaky-tests-project_1" data-view="List" data-unordered="true" data-title="Flaky tests" data-moreinfo="# number of failures for analysed builds" style="background-color:#ff9618"></div>
+    </li>
+  </ul>
+</div>

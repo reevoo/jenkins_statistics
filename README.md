@@ -11,6 +11,7 @@ Application for gathering and displaying statistical data about jenkins project 
 
 # How does it work?
 This application retrives data about builds from jenkins, analizes them and it creates some reports that are pushed to a dashboard for display.
+It uses [Dashing](http://shopify.github.com/dashing) to display the reports.
 
 ## Installation
 
@@ -25,6 +26,11 @@ To generate the reports execute:
 ```ruby
 $ bundle exec rake update_dashboard
 ```
+
+## Dashboard setup
+  - Follow the instructions from http://shopify.github.io/dashing/ to install the dashboard
+  - Create a template for each of the projects that you added in BRIEF_REPORT_FOR and DETAILED_REPORT_FOR from [.env](.env)
+    - you can copy the template examples from [/dashing_templates](dashing_templates)
 
 ## Contributing
 

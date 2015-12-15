@@ -11,4 +11,5 @@ end
 task :update_dashboard do
   require_relative 'lib/jenkins_statistics'
   JenkinsStatistics.generate
+  puts 'Dashboards updated!'
 end

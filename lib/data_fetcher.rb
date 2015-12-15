@@ -42,6 +42,6 @@ class DataFetcher
   end
 
   def base_url
-    "http://ci/job/#{project}/api/json"
+    ENV.fetch('CI_URL') + "#{project}/api/json"
   end
 end
