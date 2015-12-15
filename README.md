@@ -34,7 +34,7 @@ $ bundle exec rake update_dashboard
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ionut998/jenkins_statistics.
+Bug reports and pull requests are welcome.
 
 ## License
 
