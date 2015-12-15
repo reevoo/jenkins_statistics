@@ -23,7 +23,7 @@ $ bundle install
 To generate the reports execute:
 
 ```ruby
-$ bundle exec update_dashboard
+$ bundle exec rake update_dashboard
 ```
 
 ## Contributing

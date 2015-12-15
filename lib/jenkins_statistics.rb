@@ -13,7 +13,7 @@ require './lib/reports/ci_time_broken_report'
 class JenkinsStatistics
   
   def self.generate
-    %w(project_1 project_2).each do |project|
+    ENV.fetch('BRIEF_REPORT_FOR').split(',').each do |project|
       all_builds = DataFetcher.new(project).all_data.first(100)
 
       report = CITimeBrokenReport.new(project, all_builds.dup)
@@ -23,7 +23,7 @@ class JenkinsStatistics
       report.present
     end
 
-    %w(project_3 project_4).each do |project|
+    ENV.fetch('DETAILED_REPORT_FOR').split(',').each do |project|
       all_builds = DataFetcher.new(project).all_builds_detailed.first(100)
 
       report = CISlowestTestsReport.new(project, all_builds.dup)

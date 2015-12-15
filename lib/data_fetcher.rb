@@ -42,6 +42,6 @@ class DataFetcher
   end
 
   def base_url
-    "http://ci-url.com/job/#{project}/api/json"
+    "http://ci/job/#{project}/api/json"
   end
 end

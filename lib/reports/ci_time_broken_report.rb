@@ -47,7 +47,7 @@ class CITimeBrokenReport < CIReportBase
   end
 
   def formated_time(t)
-    mm = t.divmod(60)
+    mm, ss = t.divmod(60)
     hh, mm = mm.divmod(60)
     dd, hh = hh.divmod(24)
     "%dd,%dh,%dm "% [dd, hh, mm]
