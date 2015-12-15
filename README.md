@@ -17,6 +17,7 @@ It uses [Dashing](http://shopify.github.com/dashing) to display the reports.
 
 ```ruby
 $ bundle install
+cp .env.example .env
 ```
 
 ## Dashboard setup
