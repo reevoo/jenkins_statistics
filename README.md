@@ -10,7 +10,7 @@
 Application for gathering and displaying statistical data about jenkins project builds.
 
 # How does it work?
-This application retrives data about builds from jenkins, analizes them and it creates some reports that are pushed to a dashboard for display.
+This application retrives data about builds from jenkins, analyses them and it creates some reports that are pushed to a dashboard for display.
 It uses [Dashing](http://shopify.github.com/dashing) to display the reports.
 
 ## Installation
