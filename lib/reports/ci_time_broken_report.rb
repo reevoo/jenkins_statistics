@@ -19,7 +19,7 @@ class CITimeBrokenReport < CIReportBase
 
   def builds_timestamps
     builds_timestamps = []
-    builds.each do |build|
+    all_builds.each do |build|
       builds_timestamps << {
         time: build['timestamp'].to_i/1000,
         result: build['result']

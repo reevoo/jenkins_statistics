@@ -22,7 +22,7 @@ class CIPassingRateReport < CIReportBase
     DashboardUpdater.new(
       "#{project}-overall-info",
       { 
-        "text" => "#{builds.count} builds analysed", 
+        "text" => "#{all_builds.count} builds analysed", 
         "moreinfo" => "Average duration for succesfull builds: #{Time.at(avg_duration).utc.strftime("%H:%M:%S")}"
       }
     ).update
@@ -42,10 +42,10 @@ class CIPassingRateReport < CIReportBase
   end
 
   def success_builds
-    builds.select{|b| b['result'] == "SUCCESS"}
+    all_builds.select{|b| b['result'] == "SUCCESS"}
   end
 
   def failed_builds
-    builds.select{|b| b['result'] == "FAILURE"}
+    all_builds.select{|b| b['result'] == "FAILURE"}
   end
 end

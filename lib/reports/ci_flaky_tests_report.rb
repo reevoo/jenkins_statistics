@@ -4,7 +4,7 @@ class CIFlakyTestsReport < CIReportBase
     times = {}
     rounds = 0
     rounds_successful = 0
-    builds.each do |build|
+    all_builds_detailed.each do |build|
       rounds += 1
       next unless build['result'] == 'SUCCESS'
       next unless build[:detailed_output]
