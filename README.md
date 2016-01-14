@@ -1,9 +1,9 @@
 # Jenkins Statistics
 
-[![Build Status](https://travis-ci.org/ionut998/jenkins_statistics.svg?branch=master)](https://travis-ci.org/ionut998/jenkins_statistics)
-[![Code Climate](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/gpa.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics)
-[![Test Coverage](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/coverage.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics/coverage)
-[![Issue Count](https://codeclimate.com/github/ionut998/jenkins_statistics/badges/issue_count.svg)](https://codeclimate.com/github/ionut998/jenkins_statistics)
+[![Build Status](https://travis-ci.org/reevoo/jenkins_statistics.svg?branch=master)](https://travis-ci.org/reevoo/jenkins_statistics)
+[![Code Climate](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/gpa.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics)
+[![Test Coverage](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/coverage.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics/coverage)
+[![Issue Count](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics)
 
 
 
@@ -41,4 +41,4 @@ Bug reports and pull requests are welcome.
 
 This application is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
-![alt tag](https://raw.githubusercontent.com/ionut998/jenkins_statistics/master/dashing_templates/project_1.png?raw=true)
+![alt tag](https://raw.githubusercontent.com/reevoo/jenkins_statistics/master/dashing_templates/project_1.png?raw=true)
