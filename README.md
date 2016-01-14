@@ -40,3 +40,5 @@ Bug reports and pull requests are welcome.
 ## License
 
 This application is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+![alt tag](https://raw.githubusercontent.com/ionut998/jenkins_statistics/master/dashing_templates/project_1.png?raw=true)
