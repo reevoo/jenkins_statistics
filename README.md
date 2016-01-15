@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/gpa.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics)
 [![Test Coverage](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/coverage.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics/coverage)
 [![Issue Count](https://codeclimate.com/github/reevoo/jenkins_statistics/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/jenkins_statistics)
+[![Docker Repository on Quay](https://quay.io/repository/reevoo/jenkins_statistics/status "Docker Repository on Quay")](https://quay.io/repository/reevoo/jenkins_statistics)
 
 
 
