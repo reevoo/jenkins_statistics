@@ -1,6 +1,6 @@
 class CISlowestTestsReport < CIReportBase
 
-  def present
+  def present # rubocop:disable Metrics/AbcSize
     times = {}
     rounds = 0
     rounds_successful = 0
@@ -21,18 +21,18 @@ class CISlowestTestsReport < CIReportBase
     end
 
     tests = CISlowestTestsReport.calc_avg_time(times).first(18)
-      
+
     output = CISlowestTestsReport.format_output(tests)
 
-    DashboardUpdater.new("slow-tests-#{project}", {"items" => output}).update
+    DashboardUpdater.new("slow-tests-#{project}", 'items' => output).update
   end
 
-  def self.calc_avg_time(times)
+  def self.calc_avg_time(times) # rubocop:disable Metrics/AbcSize
     stats = {}
     times.each do |key, value|
       if value.size > 2
-        passing_builds = value.select{|x| x[:status] == 'passed'}.map{|x| x[:run_time]}.sort[1...-1]
-        stats[key] = passing_builds.inject(0) { |sum, time| sum += time; sum } / (value.size - 2) if passing_builds
+        passing_builds = value.select { |x| x[:status] == 'passed' }.map { |x| x[:run_time] }.sort[1...-1]
+        stats[key] = passing_builds.inject(:+) / (value.size - 2) if passing_builds
       end
     end
     stats.sort { |(_, time1), (_, time2)| time2 <=> time1 }
@@ -40,7 +40,7 @@ class CISlowestTestsReport < CIReportBase
 
   def self.format_output(times)
     times.each_with_object([]) do |(key, value), items|
-      items << { label: key, value: '%.2f' % value }
+      items << { label: key, value: sprintf('%.2f', value) }
     end
   end
 end

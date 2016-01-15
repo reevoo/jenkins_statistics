@@ -7,39 +7,40 @@ class CITimeBrokenReport < CIReportBase
 
     DashboardUpdater.new(
       "#{project}-time-green-red",
-      {"title" => "Green/Red time", "text" => "green:#{formated_time(time_passed_for)} red:#{formated_time(time_broken_for)}"}
+      'title' => 'Green/Red time',
+      'text' => "green:#{formated_time(time_passed_for)} red:#{formated_time(time_broken_for)}",
     ).update
   end
 
   private
 
   def builds_data
-    @_build_data ||= builds_timestamps    
+    @_build_data ||= builds_timestamps
   end
 
   def builds_timestamps
     builds_timestamps = []
     all_builds.each do |build|
       builds_timestamps << {
-        time: build['timestamp'].to_i/1000,
-        result: build['result']
+        time: build['timestamp'].to_i / 1000,
+        result: build['result'],
       }
     end
-    builds_timestamps.sort_by{ |b| b[:time]}
+    builds_timestamps.sort_by { |b| b[:time] }
   end
 
-  def generate
+  def generate # rubocop:disable Metrics/AbcSize
     self.time_broken_for = 0
     self.time_passed_for = 0
 
-    builds_timestamps.each_with_index do |build, index|
+    builds_timestamps.each_with_index do |build, _index|
 
-      if self.previous_build
-        if self.previous_build[:result] == 'SUCCESS' && build[:result] == 'SUCCESS'
-          self.time_passed_for += (build[:time] - self.previous_build[:time])
+      if previous_build
+        if previous_build[:result] == 'SUCCESS' && build[:result] == 'SUCCESS'
+          self.time_passed_for += (build[:time] - previous_build[:time])
         end
-        if self.previous_build[:result] == 'FAILURE' && build[:result] == 'FAILURE'
-          self.time_broken_for += (build[:time] - self.previous_build[:time])
+        if previous_build[:result] == 'FAILURE' && build[:result] == 'FAILURE'
+          self.time_broken_for += (build[:time] - previous_build[:time])
         end
       end
       self.previous_build = build
@@ -47,9 +48,9 @@ class CITimeBrokenReport < CIReportBase
   end
 
   def formated_time(t)
-    mm, ss = t.divmod(60)
+    mm, _ss = t.divmod(60)
     hh, mm = mm.divmod(60)
     dd, hh = hh.divmod(24)
-    "%dd,%dh,%dm "% [dd, hh, mm]
+    spritf('%dd,%dh,%dm ', dd, hh, mm)
   end
 end

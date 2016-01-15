@@ -1,15 +1,15 @@
 begin
   require 'rspec/core/rake_task'
-  
+  require 'reevoocop/rake_task'
   RSpec::Core::RakeTask.new(:rspec)
+  ReevooCop::RakeTask.new(:reevoocop)
 
-  task default: 'rspec'
+  task default: [:rspec, :reevoocop]
 rescue LoadError
   puts 'RSpec not loaded'
 end
 
+
 task :update_dashboard do
-  require_relative 'lib/jenkins_statistics'
-  JenkinsStatistics.generate
-  puts 'Dashboards updated!'
+  sh 'bin/jenkins_statistics'
 end
