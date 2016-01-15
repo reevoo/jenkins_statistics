@@ -51,6 +51,6 @@ class CITimeBrokenReport < CIReportBase
     mm, _ss = t.divmod(60)
     hh, mm = mm.divmod(60)
     dd, hh = hh.divmod(24)
-    spritf('%dd,%dh,%dm ', dd, hh, mm)
+    sprintf('%dd,%dh,%dm ', dd, hh, mm)
   end
 end
