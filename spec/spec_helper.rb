@@ -4,7 +4,8 @@ CodeClimate::TestReporter.start
 
 Bundler.require(:default, :test)
 
-ENV['RACK_ENV'] = 'test'
+require 'dotenv'
+Dotenv.load '.env.test'
 
 require 'jenkins_statistics'
 
