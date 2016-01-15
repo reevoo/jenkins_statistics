@@ -4,5 +4,3 @@ repo = 'quay.io/reevoo/jenkins_statistics'
 
 [build]
 builder = 'ruby'
-
-script = ['bundle exec rspec']
