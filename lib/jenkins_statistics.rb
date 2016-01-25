@@ -8,6 +8,7 @@ require './lib/reports/ci_passing_rate_report'
 require './lib/reports/ci_flaky_tests_report'
 require './lib/reports/ci_slowest_tests_report'
 require './lib/reports/ci_time_broken_report'
+require './lib/reports/ci_broken_by_report'
 
 
 
@@ -30,6 +31,10 @@ class JenkinsStatistics
     {
       projects_names: ENV.fetch('FLAKY_TESTS_REPORT_PROJECTS'),
       class_name: CIFlakyTestsReport,
+    },
+    {
+      projects_names: ENV.fetch('BROKEN_BY_REPORT_PROJECTS'),
+      class_name: CiBrokenByReport,
     },
   ]
 
