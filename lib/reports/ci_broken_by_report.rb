@@ -5,7 +5,7 @@ class CiBrokenByReport < CIReportBase
     DashboardUpdater.new(
       "#{project}-ci-status",
       'title' => project,
-      'status' => status_message
+      'status' => status_message,
     ).update
   end
 
@@ -30,7 +30,8 @@ class CiBrokenByReport < CIReportBase
   def passing
     # assume that is passing if lastUnsuccessfulBuild does not exist
     return true if build_overall_data.nil? || build_overall_data['lastUnsuccessfulBuild'].nil?
-    build_overall_data['lastSuccessfulBuild']['number'].to_i > build_overall_data['lastUnsuccessfulBuild']['number'].to_i
+    build_overall_data['lastSuccessfulBuild']['number'].to_i >
+      build_overall_data['lastUnsuccessfulBuild']['number'].to_i
   end
 
   def breaking_build_number

@@ -24,7 +24,7 @@ class DataFetcher
   end
 
   def get_build(build_number)
-    DataFetcher.http_get(base_url + '/' +build_number.to_s + '/api/json')
+    DataFetcher.http_get(base_url + '/' + build_number.to_s + '/api/json')
   end
 
   def overall_data
