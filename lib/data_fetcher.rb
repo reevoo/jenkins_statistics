@@ -10,7 +10,7 @@ class DataFetcher
   end
 
   def all_builds
-    @_all_builds ||= DataFetcher.http_get(base_url)['builds']
+    @_all_builds ||= DataFetcher.http_get(base_url + '/api/json')['builds']
   end
 
   def all_builds_detailed
@@ -21,6 +21,14 @@ class DataFetcher
     JSON.parse(Net::HTTP.get(URI(url)))
   rescue JSON::ParserError
     nil
+  end
+
+  def get_build(build_number)
+    DataFetcher.http_get(base_url + '/' + build_number.to_s + '/api/json')
+  end
+
+  def overall_data
+    DataFetcher.http_get(base_url + '/api/json')
   end
 
   private
@@ -42,6 +50,6 @@ class DataFetcher
   end
 
   def base_url
-    ENV.fetch('CI_URL') + "job/#{project}/api/json"
+    ENV.fetch('CI_URL') + "job/#{project}"
   end
 end

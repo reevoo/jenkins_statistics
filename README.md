@@ -31,7 +31,7 @@ cp .env.example .env
 To update the reports execute:
 
 ```ruby
-$ bundle exec rake update_dashboard
+$ bundle exec dotenv rake update_dashboard
 ```
 
 ## Contributing
