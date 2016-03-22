@@ -1,0 +1,17 @@
+<script type='text/javascript'>
+  $(function() {
+    Dashing.widget_base_dimensions = [400, 250]
+    Dashing.numColumns = 5
+  });
+</script>
+<% content_for :title do %>Ci Blame<% end %>
+<h1>Ci Blame</h1>
+<div class="gridster ci-blame">
+  <ul>
+    <% CI_BLAME_PROJECTS.each do |name| %>
+        <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+          <div data-id="<%=name%>-ci-status" data-view="CiBlame" class="green"></div>
+        </li>
+    <% end %>
+  </ul>
+</div>

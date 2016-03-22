@@ -1,0 +1,49 @@
+// ----------------------------------------------------------------------------
+// Mixins
+// ----------------------------------------------------------------------------
+@mixin transition($transition-property, $transition-time, $method) {
+  -webkit-transition: $transition-property $transition-time $method;
+  -moz-transition: $transition-property $transition-time $method;
+  -o-transition: $transition-property $transition-time $method;
+  transition: $transition-property $transition-time $method;
+}
+
+// ----------------------------------------------------------------------------
+// Sass declarations
+// ----------------------------------------------------------------------------
+$background-color: #000000;
+$title-color: rgba(255, 255, 255, 0.7);
+$status-color: #FFFFFF;
+$message-color: rgba(255, 255, 255, 0.7);
+$updated-at-color: rgba(0, 0, 0, 0.3);
+
+// ----------------------------------------------------------------------------
+// Widget-status styles
+// ----------------------------------------------------------------------------
+.widget-ci-blame {
+
+  background-color: $background-color;
+  @include transition(background-color, 1s, linear);
+
+  .title {
+    color: $title-color;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+  }
+
+  .status {
+    color: $status-color;
+    font-size: 2em;
+    margin: auto;
+    text-transform: none;
+  }
+
+  .updated-at {
+    color: $updated-at-color;
+  }
+
+}
+
+.green { background-color: #00C176; }
+.red { background-color: #FF003C; }
+.amber { background-color: #FFC200; }
