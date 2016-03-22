@@ -35,6 +35,13 @@ To update the reports execute:
 $ bundle exec dotenv rake update_dashboard
 ```
 
+
+## Main dashboard
+![Main Dashboard](https://raw.githubusercontent.com/reevoo/jenkins_statistics/master/dashing_templates/main_dashboard.png?raw=true)
+
+## CI blame dashboard
+![CI Blame Dashboard](https://raw.githubusercontent.com/reevoo/jenkins_statistics/master/dashing_templates/ci_blame.png?raw=true)
+
 ## Contributing
 
 Bug reports and pull requests are welcome.
@@ -42,5 +49,3 @@ Bug reports and pull requests are welcome.
 ## License
 
 This application is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-![alt tag](https://raw.githubusercontent.com/reevoo/jenkins_statistics/master/dashing_templates/project_1.png?raw=true)
