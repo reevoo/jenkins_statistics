@@ -23,7 +23,8 @@ cp .env.example .env
 
 ## Dashboard setup
   - Follow the instructions from [here](http://shopify.github.io/dashing/) to install the dashboard
-  - Create a template for each of the projects that you added in BRIEF_REPORT_FOR and DETAILED_REPORT_FOR from [.env](.env.example)
+  - Fill in .env file with the names of the projects for each type of report
+  - Create a template for your reports
     - you can copy the template examples from [/dashing_templates](dashing_templates)
 
 ## Usage
