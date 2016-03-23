@@ -1,7 +1,8 @@
 class CiBrokenByReport < CIReportBase
 
   def present
-    # skip if breaking build cannot be found
+    # skip if breaking build cannot be found or no change_set
+    return if !passing && (!breaking_build || !change_set)
     DashboardUpdater.new(
       "#{project}-ci-status",
       'title' => project,
