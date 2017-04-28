@@ -1,51 +1,72 @@
+require 'rubygems'
+require 'bundler/setup'
+
+Bundler.require(:default)
+
+$LOAD_PATH << File.expand_path('../', __FILE__)
+
+ENV['RACK_ENV'] ||= 'development'
+
+if %w(development test).include? ENV['RACK_ENV']
+  require 'pry'
+  require 'dotenv'
+  case ENV['RACK_ENV']
+  when 'test'
+    Dotenv.load '.env.test'
+  when 'development'
+    Dotenv.load '.env'
+  end
+end
+
+require 'singleton'
 require 'json'
 require 'net/http'
-require './lib/data_fetcher'
-require './lib/dashboard_updater'
+require 'active_support/all'
 
-require './lib/reports/ci_report_base'
-require './lib/reports/ci_passing_rate_report'
-require './lib/reports/ci_flaky_tests_report'
-require './lib/reports/ci_slowest_tests_report'
-require './lib/reports/ci_time_broken_report'
-require './lib/reports/ci_broken_by_report'
+require 'data_fetcher'
+require 'dashboard_updater'
+require 'stats_db'
 
+Dir.glob(File.join('.', 'lib', 'jobs', '*.rb'), &method(:require))
 
 
 class JenkinsStatistics
+  include Singleton
 
-  REPORTS =
-  [
-    {
-      projects_names: ENV.fetch('TIME_BROKEN_REPORT_PROJECTS'),
-      class_name: CITimeBrokenReport,
-    },
-    {
-      projects_names: ENV.fetch('PASSING_RATE_REPORT_PROJECTS'),
-      class_name: CIPassingRateReport,
-    },
-    {
-      projects_names: ENV.fetch('SLOWEST_TESTS_REPORT_PROJECTS'),
-      class_name: CISlowestTestsReport,
-    },
-    {
-      projects_names: ENV.fetch('FLAKY_TESTS_REPORT_PROJECTS'),
-      class_name: CIFlakyTestsReport,
-    },
-    {
-      projects_names: ENV.fetch('BROKEN_BY_REPORT_PROJECTS'),
-      class_name: CiBrokenByReport,
-    },
-  ]
+  def self.run(jobs: [], projects: [])
+    instance.run(jobs: jobs, projects: projects)
+  end
 
-  def self.generate
-    # TODO: remove duplication and find a way of accessing ci only one per project
+  def self.lookup(name)
+    instance.lookup(name)
+  end
 
-    REPORTS.each do |report|
-      report[:projects_names].split(',').each do |project_name|
-        report_generator = report[:class_name].new(project_name)
-        report_generator.present
-      end
+  def initialize
+    @services = { env: ENV }
+    @services[:db] = inject_dependencies(StatsDb.new)
+  end
+
+  def run(jobs: [], projects: [])
+    jobs.each do |job_name|
+      job_class = job_name.to_s.classify.constantize
+      inject_dependencies(job_class.new).run(projects: projects)
     end
+  end
+
+  def lookup(name)
+    name = name.to_sym
+    @services[name] = @services[name].call if @services[name].respond_to? :call
+    @services[name]
+  end
+
+  private
+
+  def inject_dependencies(target)
+    return target unless target.respond_to?(:init)
+    arguments = target.method(:init).parameters.map do |(_, name)|
+      lookup(name)
+    end
+    target.init(*arguments)
+    target
   end
 end

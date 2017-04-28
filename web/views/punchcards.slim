@@ -1,0 +1,11 @@
+table
+  thead
+    th Spec case
+    - @builds.each do |b|
+      th= b.id
+  tbody
+    - @punchcard.each_pair do |case_description, results|
+      tr
+        th= case_description
+        - results.each_pair do |_, status|
+          td= status

@@ -1,6 +1,10 @@
 language: ruby
 rvm:
   - 2.2.3
+services:
+  - postgresql
 addons:
   code_climate:
     repo_token: 4b440b367e25e878a4e3f4731ace51f273b99b1fd088848c6c28340fdd699ae8
+before_script:
+  - psql -c 'create database jenkins_stats_test;' -U postgres

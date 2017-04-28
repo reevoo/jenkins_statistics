@@ -1,6 +1,10 @@
 class DataFetcher
   attr_accessor :project
 
+  def self.retrieve_rspec_json(build)
+    http_get(build['url'] + 'artifact/rspec.json')
+  end
+
   def initialize(project)
     @project = project
   end
@@ -31,12 +35,18 @@ class DataFetcher
     DataFetcher.http_get(base_url + '/api/json')
   end
 
+  def each_build
+    all_builds.each do |build|
+      yield DataFetcher.http_get("#{build['url']}api/json")
+    end
+  end
+
   private
 
   def build_data
     build_data = []
-    all_builds.each do |build|
-      build_data << DataFetcher.http_get("#{build['url']}api/json")
+    each_build do |build|
+      build_data << build
     end
     build_data
   end
