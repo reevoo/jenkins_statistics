@@ -26,8 +26,8 @@ class UpdateStatsDb < Job
 
   def build_record_attributes(build_json, rspec_json)
     {
-      id: build_json['id'].to_i,
-      result: build_json['result'].downcase,
+      ci_id: build_json['id'].to_i,
+      result: build_json['result'].try(:downcase),
       document: build_json,
       rspec_json: rspec_json,
       timestamp: DateTime.strptime((build_json['timestamp'] / 1000).to_s, '%s'),

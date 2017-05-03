@@ -5,13 +5,18 @@ class StatsDb
 
   class Project < Sequel::Model
     one_to_many :builds
+    one_to_many :downstream_builds, key: :upstream_project_id, class: :Build
     one_to_many :specs
+    many_to_one :upstream_project, class: self
+    one_to_many :downstream_projects, key: :upstream_project_id, class: self
   end
 
   class Build < Sequel::Model
-    unrestrict_primary_key
     many_to_one :project
+    many_to_one :upstream_project, class: :Project
     one_to_many :spec_case_runs
+    many_to_one :upstream_build, class: self
+    one_to_many :downstream_builds, key: :upstream_build_id, class: self
   end
 
   class Spec < Sequel::Model

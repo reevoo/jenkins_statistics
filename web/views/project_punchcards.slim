@@ -1,0 +1,16 @@
+h2= @project.name
+
+table
+  thead
+    tr
+      th
+      - @builds.each do |build|
+        th
+          div= build.ci_id
+  tbody
+    - @punchcards.each_pair do |case_description, results|
+      tr
+        th= case_description
+        - results.each_pair do |build_id, status|
+          td
+            span class=['pin', status].compact alt=build_id

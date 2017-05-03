@@ -1,0 +1,35 @@
+body {
+  font-family: 'Verdana', sans-serif;
+  font-size: 12px;
+}
+
+.pin {
+  width: 20px;
+  height: 20px;
+  border: 1px solid grey;
+  display: inline-flex;
+}
+
+.pin.passed {
+  background-color: green;
+}
+.pin.failed {
+  background-color: red;
+}
+
+table {
+  border-collapse: collapse;
+}
+th {
+  font-weight: normal;
+}
+thead th div {
+  transform: rotate(-90deg);
+  transform-origin: 5px 2px 0;
+  text-align: left;
+  width: 0;
+}
+tbody th {
+  text-align: right;
+  padding-right: 10px;
+}

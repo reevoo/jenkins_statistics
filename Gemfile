@@ -18,4 +18,5 @@ group :development, :test do
   gem 'rspec'
   gem 'simplecov'
   gem 'reevoocop'
+  gem 'racksh'
 end

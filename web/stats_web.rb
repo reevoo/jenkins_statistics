@@ -22,13 +22,23 @@ end
 require 'active_support/all'
 require 'sinatra/base'
 
-require 'data_fetcher'
-require 'dashboard_updater'
-require 'stats_db'
+require 'jenkins_statistics'
 
 
 class StatsWeb < Sinatra::Application
   enable :logging
+
+  def generate_punchcard(spec_case_id, builds, status_map = nil)
+    if status_map
+      Hash[builds.map do |b|
+        [b.id, status_map[[spec_case_id, b.id]]]
+      end]
+    else
+      Hash[builds.map do |b|
+        [b.id, StatsDb::SpecCaseRun.where(build: b, spec_case_id: spec_case_id).select_map(:status).first]
+      end]
+    end
+  end
 
   get '/' do
     @projects = StatsDb::Project.all
@@ -40,14 +50,88 @@ class StatsWeb < Sinatra::Application
     @builds = project.builds
     specs_cases = StatsDb::SpecCase.eager_graph(spec: :project).where(project__id: project.id).all
 
-    @punchcard = {}
-
-    specs_cases.each do |sc|
-      @punchcard[sc.description] = Hash[@builds.map do |b|
-        [b.id, StatsDb::SpecCaseRun.where(build: b, spec_case: sc).select_map(:status).first]
-      end]
+    @punchcard = specs_cases.each_with_object({}) do |sc, punchcards|
+      punchcards[sc.description] = generate_punchcard(sc, @builds)
     end
 
     slim :punchcards
+  end
+
+  get '/spec_case/:id/punchcard' do |id|
+    @spec_case = StatsDb::SpecCase.find(id: id)
+    builds = @spec_case.spec.project.builds
+
+    @punchcard = generate_punchcard(@spec_case, builds)
+
+    slim :punchcard
+  end
+
+  get '/spec/:id/punchcards' do |id|
+    @owner = StatsDb::Spec.find(id: id)
+    builds = @owner.project.builds
+
+    @punchcards = @owner.spec_cases.each_with_object({}) do |sc, punchcards|
+      punchcards[sc.description] = generate_punchcard(sc, builds)
+    end
+
+    slim :spec_punchcards
+  end
+
+  get '/project/:name/punchcards' do |name|
+    db = StatsDb::CONNECTION
+
+    @project = StatsDb::Project.find(name: name)
+    @builds = @project.builds
+    status_map = {}
+    @punchcards = {}
+
+    if @project.upstream_project_id
+      db.fetch("""
+        SELECT sc.id, scr.build_id, scr.status
+        FROM spec_case_runs scr
+        JOIN spec_cases sc ON sc.id = scr.spec_case_id
+        JOIN specs s ON s.id = sc.spec_id
+        WHERE s.project_id = ?""", @project.id
+      ) do |row|
+        status_map[[row[:id], row[:build_id]]] = row[:status]
+      end
+
+      db.fetch("""
+        SELECT s.file_path, sc.id, sc.description
+        FROM spec_cases sc
+        JOIN specs s ON s.id = sc.spec_id
+        WHERE s.project_id = ?""", @project.id
+      ) do |row|
+        @punchcards[row[:description].ellipsisize(10, 10)] = generate_punchcard(row[:id], @builds, status_map)
+      end
+
+    else
+      db.fetch("""
+        SELECT sc.id, b.upstream_build_id, scr.status
+        FROM builds b
+        JOIN spec_case_runs scr ON b.id = scr.build_id
+        JOIN spec_cases sc ON sc.id = scr.spec_case_id
+        JOIN specs s ON s.id = sc.spec_id
+        WHERE b.upstream_build_id IN ?""", @builds.map(&:id)
+      ) do |row|
+        status_map[[row[:id], row[:upstream_build_id]]] = row[:status]
+      end
+
+      db.fetch("""
+        SELECT DISTINCT s.file_path, sc.id, sc.description
+        FROM builds b
+        JOIN spec_case_runs scr ON b.id = scr.build_id
+        JOIN spec_cases sc ON sc.id = scr.spec_case_id
+        JOIN specs s ON s.id = sc.spec_id
+        WHERE b.upstream_build_id IN ?""", @builds.map(&:id)
+      ) do |row|
+        dsc = row[:description].truncate(100, omission: "...#{row[:description].last(50)}")
+        @punchcards[dsc] = generate_punchcard(row[:id], @builds, status_map)
+      end
+    end
+
+
+
+    slim :project_punchcards
   end
 end

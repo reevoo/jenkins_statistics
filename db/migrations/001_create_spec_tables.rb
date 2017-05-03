@@ -2,19 +2,23 @@ Sequel.migration do
   up do
     create_table :projects do
       primary_key :id
+      foreign_key :upstream_project_id, :projects
       String :name
     end
 
     create_enum :build_result_enum, %w(success failure)
 
     create_table :builds do
-      Integer :id, primary_key: true, null: false
+      primary_key :id
       foreign_key :project_id, :projects
+      foreign_key :upstream_build_id, :builds
+      Integer :ci_id, null: false
       build_result_enum :result
       column :document, :jsonb, null: false
       column :rspec_json, :jsonb
       DateTime :timestamp, null: false
       DateTime :created_at, null: false
+      index [:project_id, :ci_id], unique: true
     end
 
     create_table :specs do
