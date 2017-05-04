@@ -12,7 +12,7 @@ gem 'puma'
 gem 'codeclimate-test-reporter', group: :test, require: nil
 
 group :development, :test do
-  gem 'rake'
+  gem 'shotgun'
   gem 'dotenv'
   gem 'pry-byebug'
   gem 'rspec'

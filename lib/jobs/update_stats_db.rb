@@ -18,20 +18,35 @@ class UpdateStatsDb < Job
 
   def process_build(project, build_json)
     print '.'
-    return unless project.builds_dataset.where(id: build_json['id'].to_i).empty?
+    build = project.builds_dataset.where(ci_id: build_json['id'].to_i).first
+    return build if build
     rspec_json = DataFetcher.retrieve_rspec_json(build_json)
     build = project.add_build(build_record_attributes(build_json, rspec_json))
     process_rspec_json(project, build, rspec_json)
+    build
   end
 
   def build_record_attributes(build_json, rspec_json)
-    {
+    attributes = {
       ci_id: build_json['id'].to_i,
       result: build_json['result'].try(:downcase),
       document: build_json,
       rspec_json: rspec_json,
       timestamp: DateTime.strptime((build_json['timestamp'] / 1000).to_s, '%s'),
     }
+    return attributes unless build_json['actions'].is_a?(Array)
+    action = build_json['actions'].find { |action| action.key?('causes') }
+    cause = action['causes'][0] if action
+    return attributes unless cause && cause['upstreamProject'] && cause['upstreamBuild']
+
+    upstream_project = StatsDb::Project.find_or_create(name: cause['upstreamProject'])
+    fetcher = DataFetcher.new(cause['upstreamProject'])
+    upstream_build = process_build(upstream_project, fetcher.get_build(cause['upstreamBuild']))
+
+    attributes.merge(
+      upstream_build_id: upstream_build.id,
+      upstream_project_id: upstream_project.id,
+    )
   end
 
   def process_rspec_json(project, build, rspec_json)

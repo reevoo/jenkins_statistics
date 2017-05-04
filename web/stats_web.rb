@@ -45,18 +45,6 @@ class StatsWeb < Sinatra::Application
     slim :projects
   end
 
-  get '/:project/punchcards' do |project|
-    project = StatsDb::Project.where(name: project).first
-    @builds = project.builds
-    specs_cases = StatsDb::SpecCase.eager_graph(spec: :project).where(project__id: project.id).all
-
-    @punchcard = specs_cases.each_with_object({}) do |sc, punchcards|
-      punchcards[sc.description] = generate_punchcard(sc, @builds)
-    end
-
-    slim :punchcards
-  end
-
   get '/spec_case/:id/punchcard' do |id|
     @spec_case = StatsDb::SpecCase.find(id: id)
     builds = @spec_case.spec.project.builds
@@ -77,11 +65,11 @@ class StatsWeb < Sinatra::Application
     slim :spec_punchcards
   end
 
-  get '/project/:name/punchcards' do |name|
+  get '/projects/:name/punchcards' do |name|
     db = StatsDb::CONNECTION
 
     @project = StatsDb::Project.find(name: name)
-    @builds = @project.builds
+    @builds = @project.builds_dataset.order(:ci_id).all
     status_map = {}
     @punchcards = {}
 
@@ -102,7 +90,8 @@ class StatsWeb < Sinatra::Application
         JOIN specs s ON s.id = sc.spec_id
         WHERE s.project_id = ?""", @project.id
       ) do |row|
-        @punchcards[row[:description].ellipsisize(10, 10)] = generate_punchcard(row[:id], @builds, status_map)
+        dsc = row[:description].truncate(100, omission: "...#{row[:description].last(50)}")
+        @punchcards[dsc] = generate_punchcard(row[:id], @builds, status_map)
       end
 
     else
@@ -129,8 +118,6 @@ class StatsWeb < Sinatra::Application
         @punchcards[dsc] = generate_punchcard(row[:id], @builds, status_map)
       end
     end
-
-
 
     slim :project_punchcards
   end
