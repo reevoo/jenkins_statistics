@@ -41,8 +41,8 @@ Sequel.migration do
 
     create_table :spec_case_runs do
       primary_key :id
-      foreign_key :spec_case_id, :spec_cases
-      foreign_key :build_id, :builds
+      foreign_key :spec_case_id, :spec_cases, on_delete: :cascade
+      foreign_key :build_id, :builds, on_delete: :cascade
       spec_case_run_status_enum :status
       column :exception, :jsonb
       Float :run_time

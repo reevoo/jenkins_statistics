@@ -27,6 +27,7 @@ require 'data_fetcher'
 require 'dashboard_updater'
 require 'stats_db'
 
+Dir.glob(File.join('.', 'lib', 'actions', '*.rb'), &method(:require))
 Dir.glob(File.join('.', 'lib', 'jobs', '*.rb'), &method(:require))
 
 

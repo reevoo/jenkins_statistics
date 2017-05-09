@@ -124,4 +124,11 @@ class StatsWeb < Sinatra::Application
 
     slim :project_punchcards
   end
+
+
+  post '/build' do
+    json = JSON.parse(request.body.read)
+    Build::Process.new(build_json: json['build'], rspec_json: json['rspec']).execute
+    'Processed'
+  end
 end

@@ -2,12 +2,13 @@ require 'date'
 
 module Build
   class Process
+    UPSTREAM_STRATEGIES = [:find, :fetch].freeze
 
     def initialize(build_json:, rspec_json: nil, project: nil, upstream_strategy: :find)
       @build_json = build_json
       @rspec_json = rspec_json
       @project = project || get_project_from_build_json(build_json)
-      @upstream_strategy = upstream_strategy
+      @upstream_strategy = (UPSTREAM_STRATEGIES & [upstream_strategy]).first
     end
 
     def execute
