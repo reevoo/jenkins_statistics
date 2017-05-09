@@ -69,7 +69,10 @@ class StatsWeb < Sinatra::Application
     db = StatsDb::CONNECTION
 
     @project = StatsDb::Project.find(name: name)
-    @builds = @project.builds_dataset.order(:ci_id).all
+    @builds = @project.builds_dataset.order(:ci_id)
+    @builds = @builds.where('ci_id >= ?', params[:from].to_i) if params[:from]
+    @builds = @builds.where('ci_id <= ?', params[:to].to_i) if params[:to]
+    @builds = @builds.all
     status_map = {}
     @punchcards = {}
 

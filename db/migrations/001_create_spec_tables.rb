@@ -6,7 +6,7 @@ Sequel.migration do
       String :name
     end
 
-    create_enum :build_result_enum, %w(success failure)
+    create_enum :build_result_enum, %w(success failure aborted)
 
     create_table :builds do
       primary_key :id
