@@ -5,8 +5,8 @@ class CiBrokenByReport < CIReportBase
     return if !passing && (!breaking_build || !change_set)
     DashboardUpdater.new(
       "#{project}-ci-status",
-      'title' => project,
-      'status' => status_message,
+      "title" => project,
+      "status" => status_message,
     ).update
   end
 
@@ -14,14 +14,14 @@ class CiBrokenByReport < CIReportBase
 
   def status_message
     if !passing
-      "Broken by: #{change_set['author']['fullName']}"
+      "Broken by: #{change_set["author"]["fullName"]}"
     else
-      'Passing'
+      "Passing"
     end
   end
 
   def change_set
-    breaking_build['changeSet']['items'][0]
+    breaking_build["changeSet"]["items"][0]
   end
 
   def build_overall_data
@@ -30,14 +30,14 @@ class CiBrokenByReport < CIReportBase
 
   def passing
     # assume that is passing if lastUnsuccessfulBuild does not exist
-    return true if build_overall_data.nil? || build_overall_data['lastUnsuccessfulBuild'].nil?
-    build_overall_data['lastSuccessfulBuild']['number'].to_i >
-      build_overall_data['lastUnsuccessfulBuild']['number'].to_i
+    return true if build_overall_data.nil? || build_overall_data["lastUnsuccessfulBuild"].nil?
+    build_overall_data["lastSuccessfulBuild"]["number"].to_i >
+      build_overall_data["lastUnsuccessfulBuild"]["number"].to_i
   end
 
   def breaking_build_number
     return unless build_overall_data
-    build_overall_data['lastStableBuild']['number'].to_i + 1
+    build_overall_data["lastStableBuild"]["number"].to_i + 1
   end
 
   def breaking_build

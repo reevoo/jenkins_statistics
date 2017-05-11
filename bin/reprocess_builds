@@ -1,31 +1,31 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift File.expand_path("../lib", File.dirname(__FILE__))
 
-require 'jenkins_statistics'
+require "jenkins_statistics"
 
 builds = StatsDb::Build.all
 
 builds.each do |build|
-  next unless build.document && build.document['actions'].is_a?(Array)
-  cause = build.document['actions'].find { |action| action.key?('causes') }['causes'][0]
+  next unless build.document && build.document["actions"].is_a?(Array)
+  cause = build.document["actions"].find { |action| action.key?("causes") }["causes"][0]
 
-  next unless cause && cause['upstreamProject']
+  next unless cause && cause["upstreamProject"]
 
-  upstream_project = StatsDb::Project.find_or_create(name: cause['upstreamProject'])
-  upstream_build = StatsDb::Build.find(project_id: upstream_project.id, ci_id: cause['upstreamBuild'])
+  upstream_project = StatsDb::Project.find_or_create(name: cause["upstreamProject"])
+  upstream_build = StatsDb::Build.find(project_id: upstream_project.id, ci_id: cause["upstreamBuild"])
 
   unless upstream_build
     fetcher = DataFetcher.new(upstream_project.name)
-    build_json = fetcher.get_build(cause['upstreamBuild'])
+    build_json = fetcher.get_build(cause["upstreamBuild"])
     rspec_json = DataFetcher.retrieve_rspec_json(build_json)
 
     upstream_build = StatsDb::Build.create(
       project_id: upstream_project.id,
-      ci_id: build_json['id'].to_i,
-      result: build_json['result'].try(:downcase),
+      ci_id: build_json["id"].to_i,
+      result: build_json["result"].try(:downcase),
       document: build_json,
       rspec_json: rspec_json,
-      timestamp: DateTime.strptime((build_json['timestamp'] / 1000).to_s, '%s'),
+      timestamp: DateTime.strptime((build_json["timestamp"] / 1000).to_s, "%s"),
     )
   end
 

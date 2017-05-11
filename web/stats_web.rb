@@ -1,28 +1,28 @@
-require 'rubygems'
-require 'bundler/setup'
+require "rubygems"
+require "bundler/setup"
 
 Bundler.require(:default)
 
-$LOAD_PATH << File.expand_path('../', __FILE__)
-$LOAD_PATH << File.expand_path('../../lib/', __FILE__)
+$LOAD_PATH << File.expand_path("../", __FILE__)
+$LOAD_PATH << File.expand_path("../../lib/", __FILE__)
 
-ENV['RACK_ENV'] ||= 'development'
+ENV["RACK_ENV"] ||= "development"
 
-if %w(development test).include? ENV['RACK_ENV']
-  require 'pry'
-  require 'dotenv'
-  case ENV['RACK_ENV']
-  when 'test'
-    Dotenv.load '.env.test'
-  when 'development'
-    Dotenv.load '.env'
+if %w(development test).include? ENV["RACK_ENV"]
+  require "pry"
+  require "dotenv"
+  case ENV["RACK_ENV"]
+  when "test"
+    Dotenv.load ".env.test"
+  when "development"
+    Dotenv.load ".env"
   end
 end
 
-require 'active_support/all'
-require 'sinatra/base'
+require "active_support/all"
+require "sinatra/base"
 
-require 'jenkins_statistics'
+require "jenkins_statistics"
 
 
 class StatsWeb < Sinatra::Application
@@ -40,12 +40,12 @@ class StatsWeb < Sinatra::Application
     end
   end
 
-  get '/' do
+  get "/" do
     @projects = StatsDb::Project.all
     slim :projects
   end
 
-  get '/spec_case/:id/punchcard' do |id|
+  get "/spec_case/:id/punchcard" do |id|
     @spec_case = StatsDb::SpecCase.find(id: id)
     builds = @spec_case.spec.project.builds
 
@@ -54,7 +54,7 @@ class StatsWeb < Sinatra::Application
     slim :punchcard
   end
 
-  get '/spec/:id/punchcards' do |id|
+  get "/spec/:id/punchcards" do |id|
     @owner = StatsDb::Spec.find(id: id)
     builds = @owner.project.builds
 
@@ -65,13 +65,13 @@ class StatsWeb < Sinatra::Application
     slim :spec_punchcards
   end
 
-  get '/projects/:name/punchcards' do |name|
+  get "/projects/:name/punchcards" do |name|
     db = StatsDb::CONNECTION
 
     @project = StatsDb::Project.find(name: name)
     @builds = @project.builds_dataset.order(:ci_id)
-    @builds = @builds.where('ci_id >= ?', params[:from].to_i) if params[:from]
-    @builds = @builds.where('ci_id <= ?', params[:to].to_i) if params[:to]
+    @builds = @builds.where("ci_id >= ?", params[:from].to_i) if params[:from]
+    @builds = @builds.where("ci_id <= ?", params[:to].to_i) if params[:to]
     @builds = @builds.all
     status_map = {}
     @punchcards = {}
@@ -126,9 +126,9 @@ class StatsWeb < Sinatra::Application
   end
 
 
-  post '/build' do
+  post "/build" do
     json = JSON.parse(request.body.read)
-    Build::Process.new(build_json: json['build'], rspec_json: json['rspec']).execute
-    'Processed'
+    Build::Process.new(build_json: json["build"], rspec_json: json["rspec"]).execute
+    "Processed"
   end
 end

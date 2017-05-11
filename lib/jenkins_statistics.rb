@@ -1,34 +1,34 @@
-require 'rubygems'
-require 'bundler/setup'
+require "rubygems"
+require "bundler/setup"
 
 Bundler.require(:default)
 
-$LOAD_PATH << File.expand_path('../', __FILE__)
+$LOAD_PATH << File.expand_path("../", __FILE__)
 
-ENV['RACK_ENV'] ||= 'development'
+ENV["RACK_ENV"] ||= "development"
 
-if %w(development test).include? ENV['RACK_ENV']
-  require 'pry'
-  require 'dotenv'
-  case ENV['RACK_ENV']
-  when 'test'
-    Dotenv.load '.env.test'
-  when 'development'
-    Dotenv.load '.env'
+if %w(development test).include? ENV["RACK_ENV"]
+  require "pry"
+  require "dotenv"
+  case ENV["RACK_ENV"]
+  when "test"
+    Dotenv.load ".env.test"
+  when "development"
+    Dotenv.load ".env"
   end
 end
 
-require 'singleton'
-require 'json'
-require 'net/http'
-require 'active_support/all'
+require "singleton"
+require "json"
+require "net/http"
+require "active_support/all"
 
-require 'data_fetcher'
-require 'dashboard_updater'
-require 'stats_db'
+require "data_fetcher"
+require "dashboard_updater"
+require "stats_db"
 
-Dir.glob(File.join('.', 'lib', 'actions', '*.rb'), &method(:require))
-Dir.glob(File.join('.', 'lib', 'jobs', '*.rb'), &method(:require))
+Dir.glob(File.join(".", "lib", "actions", "*.rb"), &method(:require))
+Dir.glob(File.join(".", "lib", "jobs", "*.rb"), &method(:require))
 
 
 class JenkinsStatistics

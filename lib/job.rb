@@ -1,6 +1,6 @@
 class Job
 
   def run
-    fail NoMethodError, 'Need implementation'
+    fail NoMethodError, "Need implementation"
   end
 end

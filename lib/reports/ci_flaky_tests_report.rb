@@ -6,13 +6,13 @@ class CIFlakyTestsReport < CIReportBase
     rounds_successful = 0
     all_builds_detailed.each do |build|
       rounds += 1
-      next unless build['result'] == 'SUCCESS'
+      next unless build["result"] == "SUCCESS"
       next unless build[:detailed_output]
       rounds_successful += 1
-      examples = build[:detailed_output]['examples']
-                 .concat((build[:detailed_output]['profile'] && build[:detailed_output]['profile']['examples']) || [])
+      examples = build[:detailed_output]["examples"]
+                 .concat((build[:detailed_output]["profile"] && build[:detailed_output]["profile"]["examples"]) || [])
       examples.each do |example|
-        key = "#{example['file_path']}:#{example['line_number']}"
+        key = "#{example["file_path"]}:#{example["line_number"]}"
         times[key] ||= 1
         times[key] += 1
       end
@@ -22,7 +22,7 @@ class CIFlakyTestsReport < CIReportBase
 
     output = CIFlakyTestsReport.failures_format_output(times)
 
-    DashboardUpdater.new("flaky-tests-#{project}", 'items' => output).update
+    DashboardUpdater.new("flaky-tests-#{project}", "items" => output).update
   end
 
   def self.calc_nr_of_failure(times)

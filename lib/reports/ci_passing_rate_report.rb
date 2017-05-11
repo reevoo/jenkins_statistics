@@ -11,9 +11,9 @@ class CIPassingRateReport < CIReportBase
     DashboardUpdater.new(
       "#{project}-passing-rate",
 
-      'value' => pass_rate,
-      'title' => 'Passing rate',
-      'moreinfo' => "Success builds: #{success_builds.count} / Failed builds: #{failed_builds.count}",
+      "value" => pass_rate,
+      "title" => "Passing rate",
+      "moreinfo" => "Success builds: #{success_builds.count} / Failed builds: #{failed_builds.count}",
 
     ).update
   end
@@ -22,8 +22,8 @@ class CIPassingRateReport < CIReportBase
     DashboardUpdater.new(
       "#{project}-overall-info",
 
-      'text' => "#{all_builds.count} builds analysed",
-      'moreinfo' => "Average duration for succesfull builds: #{Time.at(avg_duration).utc.strftime('%H:%M:%S')}",
+      "text" => "#{all_builds.count} builds analysed",
+      "moreinfo" => "Average duration for succesfull builds: #{Time.at(avg_duration).utc.strftime("%H:%M:%S")}",
 
     ).update
   end
@@ -38,14 +38,14 @@ class CIPassingRateReport < CIReportBase
 
   def avg_duration
     return 0 if success_builds.empty?
-    success_builds.map { |b| (b['duration'].to_f / 1000) }.reduce(:+) / success_builds.count
+    success_builds.map { |b| (b["duration"].to_f / 1000) }.reduce(:+) / success_builds.count
   end
 
   def success_builds
-    all_builds.select { |b| b['result'] == 'SUCCESS' }
+    all_builds.select { |b| b["result"] == "SUCCESS" }
   end
 
   def failed_builds
-    all_builds.select { |b| b['result'] == 'FAILURE' }
+    all_builds.select { |b| b["result"] == "FAILURE" }
   end
 end

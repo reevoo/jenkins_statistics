@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift File.expand_path("../lib", File.dirname(__FILE__))
 
-require 'jenkins_statistics'
+require "jenkins_statistics"
 
 # JenkinsStatistics.run(jobs: [:update_dashboard])
 JenkinsStatistics.run(jobs: [:update_stats_db], projects: [:filler_parallel, :world_parallel])

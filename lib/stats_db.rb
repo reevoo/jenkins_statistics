@@ -1,5 +1,5 @@
 class StatsDb
-  CONNECTION = Sequel.connect(ENV.fetch('DATABASE_URL'))
+  CONNECTION = Sequel.connect(ENV.fetch("DATABASE_URL"))
   Sequel::Model.plugin :timestamps
   CONNECTION.extension :pg_enum, :pg_array, :pg_json
 

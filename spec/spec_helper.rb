@@ -1,13 +1,13 @@
-require 'bundler'
-require 'codeclimate-test-reporter'
+require "bundler"
+require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
 Bundler.require(:default, :test)
 
-require 'dotenv'
-Dotenv.load '.env.test'
+require "dotenv"
+Dotenv.load ".env.test"
 
-require 'jenkins_statistics'
+require "jenkins_statistics"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

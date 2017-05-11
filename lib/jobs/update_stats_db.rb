@@ -1,5 +1,5 @@
-require 'job'
-require 'actions/build'
+require "job"
+require "actions/build"
 
 
 class UpdateStatsDb < Job
@@ -25,8 +25,8 @@ class UpdateStatsDb < Job
 
   def process_build(project, build_json)
     return if build_json.blank?
-    return unless project.builds_dataset.where(ci_id: build_json['id'].to_i).empty?
-    print '.'
+    return unless project.builds_dataset.where(ci_id: build_json["id"].to_i).empty?
+    print "."
 
     Build::Process.new(
       build_json: build_json,
