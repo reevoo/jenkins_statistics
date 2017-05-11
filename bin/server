@@ -1,0 +1,4 @@
+#!/bin/sh -xe
+
+bin/rake db:migrate
+bin/puma
