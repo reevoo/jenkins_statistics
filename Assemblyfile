@@ -4,3 +4,6 @@ repo = 'quay.io/reevoo/jenkins_statistics'
 
 [build]
 builder = 'ruby'
+
+[build.service.postgres]
+version = "9.6.1"
