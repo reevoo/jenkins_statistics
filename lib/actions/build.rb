@@ -37,7 +37,7 @@ module Build
       cause = action["causes"][0] if action
       return attributes unless cause && cause["upstreamProject"] && cause["upstreamBuild"]
 
-      uttributes.merge(
+      attributes.merge(
         upstream_project_id: upstream_project_id(cause),
         upstream_build_id: upstream_build_id(cause),
       )
