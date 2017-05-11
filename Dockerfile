@@ -21,6 +21,7 @@ RUN apk add --no-cache --virtual .builddeps \
   && apk add --no-cache --virtual .rundeps \
       $runDeps \
       ruby$(cat .ruby-version) \
+      ruby$(cat .ruby-version)-irb \
       ca-certificates \
   && apk del --no-cache .builddeps
 
