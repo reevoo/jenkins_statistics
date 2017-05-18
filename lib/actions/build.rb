@@ -78,6 +78,7 @@ module Build
           status: example["status"],
           exception: example["exception"],
           run_time: example["run_time"],
+          line_number: example["line_number"],
         )
       end
     end
