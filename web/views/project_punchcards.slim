@@ -6,7 +6,8 @@ table
       th
       - @builds.each do |build|
         th
-          div= build.ci_id
+          div class='build-id'
+            a class=build.result href=build.document['url'] = build.ci_id
   tbody
     - @punchcards.each_pair do |case_description, results|
       tr

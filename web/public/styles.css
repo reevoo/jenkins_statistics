@@ -23,13 +23,34 @@ table {
 th {
   font-weight: normal;
 }
-thead th div {
+
+thead div.build-id {
   transform: rotate(-90deg);
   transform-origin: 5px 2px 0;
   text-align: left;
   width: 0;
 }
+thead a {
+  text-decoration: none;
+}
+thead a:hover {
+  text-decoration: underline;
+}
+thead a.success {
+  color: green;
+}
+thead a.failure {
+  color: red;
+}
+thead a.aborted {
+  color: #d4d4d4;
+}
+
 tbody th {
   text-align: right;
   padding-right: 10px;
+}
+
+tbody tr:hover td, tbody tr:hover th {
+  background: #f1f1f1;
 }
