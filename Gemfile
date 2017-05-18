@@ -7,7 +7,7 @@ gem "pg"
 gem "rake"
 gem "sinatra"
 gem "slim"
-gem "puma"
+gem "puma", "~> 3.7.1"
 
 gem "codeclimate-test-reporter", group: :test, require: nil
 
