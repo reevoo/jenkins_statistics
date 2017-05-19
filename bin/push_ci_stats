@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require "net/http"
+require "uri"
+
+job_name = ARGV[0]
+build_id = ARGV[1]
+
+api_url   = URI(ARGV[2] || "https://jenkins-statistics.reevoocloud.com/build")
+build_url = URI("http://ci/job/#{job_name}/#{build_id}/api/json")
+rspec_url = URI("http://ci/job/#{job_name}/#{build_id}/artifact/rspec.json")
+
+
+api_json_parts = []
+
+build_responce = Net::HTTP.get_response(build_url)
+api_json_parts << %("build":#{build_responce.body}) if build_responce.code == "200"
+
+rspec_responce = Net::HTTP.get_response(rspec_url)
+api_json_parts << %("rspec":#{rspec_responce.body}) if rspec_responce.code == "200"
+
+
+api_request = Net::HTTP::Post.new(api_url, "Content-Type" => "application/json")
+api_request.body = "{#{api_json_parts.join(",")}}"
+
+
+Net::HTTP.start(api_url.hostname, api_url.port) do |http|
+  http.request(api_request)
+end
