@@ -6,6 +6,8 @@ require "uri"
 job_name = ARGV[0]
 build_id = ARGV[1]
 
+puts "Pushing CI stats for #{job_name} build ##{build_id}"
+
 api_url   = URI(ARGV[2] || "https://jenkins-statistics.reevoocloud.com/build")
 build_url = URI("http://ci/job/#{job_name}/#{build_id}/api/json")
 rspec_url = URI("http://ci/job/#{job_name}/#{build_id}/artifact/rspec.json")
