@@ -9,6 +9,10 @@ class StatsDb
     one_to_many :specs
     many_to_one :upstream_project, class: self
     one_to_many :downstream_projects, key: :upstream_project_id, class: self
+
+    def upstream?
+      upstream_project.nil?
+    end
   end
 
   class Build < Sequel::Model

@@ -14,6 +14,9 @@ module Build
     def execute
       @project.add_build(build_record_attributes(@build_json, @rspec_json)).tap do |build|
         process_rspec_json(build, @rspec_json)
+        # As we process each build result separately (pushing from ci to api) we want to find and link the downstream
+        # builds that were processed before the upstream build.
+        assign_downstream_builds(@project, build) if @project.upstream?
       end
     end
 
@@ -32,15 +35,20 @@ module Build
         rspec_json: rspec_json,
         timestamp: DateTime.strptime((build_json["timestamp"] / 1000).to_s, "%s"),
       }
-      return attributes unless build_json["actions"].is_a?(Array)
-      action = build_json["actions"].find { |a| a.key?("causes") }
-      cause = action["causes"][0] if action
-      return attributes unless cause && cause["upstreamProject"] && cause["upstreamBuild"]
+      cause = build_cause(build_json)
+      return attributes unless cause
 
       attributes.merge(
         upstream_project_id: upstream_project_id(cause),
         upstream_build_id: upstream_build_id(cause),
       )
+    end
+
+    def build_cause(build_json)
+      return unless build_json["actions"].is_a?(Array)
+      action = build_json["actions"].find { |a| a.key?("causes") }
+      cause = action["causes"][0] if action
+      (cause && cause["upstreamProject"] && cause["upstreamBuild"]) ? cause : nil
     end
 
     def upstream_build_id(cause)
@@ -80,6 +88,13 @@ module Build
           run_time: example["run_time"],
           line_number: example["line_number"],
         )
+      end
+    end
+
+    def assign_downstream_builds(project, upstream_build)
+      StatsDb::Build.where(upstream_project_id: project.id, upstream_build_id: nil).each do |build|
+        cause = build_cause(build.document)
+        build.update(upstream_build_id: upstream_build.id) if upstream_build.ci_id == cause["upstreamBuild"].to_i
       end
     end
   end
