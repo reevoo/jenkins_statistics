@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
-require "net/http"
 require "uri"
+require "net/http"
+require "net/https"
 
 job_name = ARGV[0]
 build_id = ARGV[1]
@@ -22,10 +23,10 @@ rspec_responce = Net::HTTP.get_response(rspec_url)
 api_json_parts << %("rspec":#{rspec_responce.body}) if rspec_responce.code == "200"
 
 
-api_request = Net::HTTP::Post.new(api_url, "Content-Type" => "application/json")
+api_request = Net::HTTP::Post.new(api_url.path, "Content-Type" => "application/json")
 api_request.body = "{#{api_json_parts.join(",")}}"
 
 
-Net::HTTP.start(api_url.hostname, api_url.port) do |http|
-  http.request(api_request)
-end
+http = Net::HTTP.new(api_url.hostname, api_url.port)
+http.use_ssl = (api_url.scheme == "https")
+http.request(api_request)
