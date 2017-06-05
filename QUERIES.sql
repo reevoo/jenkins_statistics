@@ -164,3 +164,62 @@ ORDER BY failed_count DESC
 GROUP BY 1,2,3
 HAVING count(*) > 1
 ;
+
+
+
+-- Get test results encoded into string for each specs case
+
+SELECT project_id, spec_case_id, string_agg(status, '') AS results, COUNT(*) FROM (
+  SELECT b.project_id, sc.id AS spec_case_id, b.ci_id, (CASE scr.status WHEN 'passed' THEN '1' WHEN 'failed' THEN '0' ELSE 'x' END) AS status
+  FROM spec_cases sc
+  LEFT JOIN spec_case_runs scr ON sc.id = scr.spec_case_id
+  LEFT JOIN builds b ON b.id = scr.build_id
+  ORDER BY 1,2
+) status_query
+GROUP BY 1,2;
+
+
+-- Get most flaky test cases based on number of edges
+
+SELECT p.name AS project, s.file_path, sc.description, edges
+FROM spec_cases sc
+JOIN specs s ON s.id = sc.spec_id
+JOIN projects p ON p.id = s.project_id
+JOIN (
+  SELECT project_id, spec_case_id, count(*) AS edges FROM (
+    SELECT project_id, spec_case_id, regexp_matches(results, '(01+0)', 'g') FROM (
+      SELECT project_id, spec_case_id, string_agg(status, '') AS results, COUNT(*) FROM (
+        SELECT b.project_id, sc.id AS spec_case_id, b.ci_id, (CASE scr.status WHEN 'passed' THEN '1' WHEN 'failed' THEN '0' ELSE 'x' END) AS status
+        FROM spec_cases sc
+        LEFT JOIN spec_case_runs scr ON sc.id = scr.spec_case_id
+        LEFT JOIN builds b ON b.id = scr.build_id
+        ORDER BY 1,2
+      ) status_query
+      GROUP BY 1,2
+    ) aggregated
+    -- WHERE results ~ '0+1+0+'
+  ) pattern_match
+  GROUP BY 1,2
+) counted_edges ON counted_edges.spec_case_id = sc.id
+ORDER BY edges desc;
+
+
+
+-- Get test results encoded into string for each specs case in project including skipped tests in build
+
+SELECT spec_case_id, string_agg(status, '') AS results, COUNT(*) FROM (
+SELECT comb.project_id, comb.spec_case_id, comb.build_ci_id, (CASE scr.status WHEN 'passed' THEN '1' WHEN 'failed' THEN '0' ELSE 'x' END) AS status
+FROM spec_case_runs scr
+RIGHT JOIN (
+    SELECT b.project_id, b.id AS build_id, b.ci_id AS build_ci_id, sc.id AS spec_case_id
+    FROM builds b
+    CROSS JOIN (
+        SELECT sc.* FROM spec_cases sc
+        JOIN specs s ON s.id = sc.spec_id
+        WHERE s.project_id = 11
+    ) sc
+    WHERE b.project_id = 11
+) comb ON comb.spec_case_id = scr.spec_case_id AND comb.build_id = scr.build_id
+-- ORDER BY 1,2
+) status_query
+GROUP BY 1;
