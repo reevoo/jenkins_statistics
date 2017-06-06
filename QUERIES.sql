@@ -179,29 +179,58 @@ SELECT project_id, spec_case_id, string_agg(status, '') AS results, COUNT(*) FRO
 GROUP BY 1,2;
 
 
--- Get most flaky test cases based on number of edges
+-- Get most flaky spec cases based on number of edges
 
-SELECT p.name AS project, s.file_path, sc.description, edges
+SELECT p.name AS project, s.file_path, sc.description, edges, last_failed
 FROM spec_cases sc
 JOIN specs s ON s.id = sc.spec_id
 JOIN projects p ON p.id = s.project_id
 JOIN (
-  SELECT project_id, spec_case_id, count(*) AS edges FROM (
-    SELECT project_id, spec_case_id, regexp_matches(results, '(01+0)', 'g') FROM (
-      SELECT project_id, spec_case_id, string_agg(status, '') AS results, COUNT(*) FROM (
-        SELECT b.project_id, sc.id AS spec_case_id, b.ci_id, (CASE scr.status WHEN 'passed' THEN '1' WHEN 'failed' THEN '0' ELSE 'x' END) AS status
+  SELECT project_id, spec_case_id, count(*) AS edges, max(last_failed) AS last_failed FROM (
+    SELECT project_id, spec_case_id, regexp_matches(results, '(01+0)', 'g'), last_failed FROM (
+      SELECT project_id, spec_case_id, string_agg(status, '') AS results, COUNT(*), max(created_at) AS last_failed FROM (
+        SELECT b.project_id, b.id, sc.id AS spec_case_id, (CASE scr.status WHEN 'passed' THEN '1' WHEN 'failed' THEN '0' ELSE 'x' END) AS status, scr.created_at
         FROM spec_cases sc
-        LEFT JOIN spec_case_runs scr ON sc.id = scr.spec_case_id
-        LEFT JOIN builds b ON b.id = scr.build_id
+        JOIN spec_case_runs scr ON sc.id = scr.spec_case_id
+        JOIN builds b ON b.id = scr.build_id
+        -- WHERE b.project_id=11
         ORDER BY 1,2
       ) status_query
       GROUP BY 1,2
     ) aggregated
-    -- WHERE results ~ '0+1+0+'
   ) pattern_match
   GROUP BY 1,2
 ) counted_edges ON counted_edges.spec_case_id = sc.id
 ORDER BY edges desc;
+
+
+
+-- Get most flaky specs based on number of edges aggregated over spec cases
+
+SELECT p.name AS project, s.file_path, edges, last_failed
+FROM specs s
+JOIN projects p ON p.id = s.project_id
+JOIN (
+  SELECT project_id, spec_id, count(*) AS edges, max(last_failed) AS last_failed FROM (
+    SELECT project_id, spec_id, regexp_matches(results, '(01+0)', 'g'), last_failed FROM (
+      SELECT project_id, spec_id, string_agg(status, '') AS results, max(last_failed) AS last_failed FROM (
+        SELECT project_id, build_id, spec_id, (CASE WHEN failed_cases > 0 THEN '0' ELSE '1' END) AS status, last_failed FROM (
+          SELECT b.project_id, b.id AS build_id, sc.spec_id, count(*) FILTER (WHERE scr.status = 'failed') AS failed_cases, max(scr.created_at) FILTER (WHERE scr.status = 'failed') AS last_failed
+            FROM spec_cases sc
+            JOIN spec_case_runs scr ON sc.id = scr.spec_case_id
+            JOIN builds b ON b.id = scr.build_id
+            WHERE b.project_id=11
+            GROUP BY 1,2,3
+            ORDER BY 1,2
+          ) status_query
+        ) agg_by_specs
+      GROUP BY 1,2
+    ) aggregated
+  ) pattern_match
+  GROUP BY 1,2
+) counted_edges ON counted_edges.spec_id = s.id
+ORDER BY edges desc;
+
 
 
 
