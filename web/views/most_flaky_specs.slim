@@ -1,0 +1,16 @@
+h2 Most flaky specs
+
+table
+  thead
+    tr
+      th Project
+      th Spec file
+      th No. of edges
+      th Last failed
+  tbody
+    - @flaky_specs.each do |spec|
+      tr
+        td = spec[:project]
+        td = spec[:file_path]
+        td = spec[:edges]
+        td = spec[:last_failed]

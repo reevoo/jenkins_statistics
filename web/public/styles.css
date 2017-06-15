@@ -1,7 +1,16 @@
 body {
   font-family: 'Verdana', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
 }
+
+table {
+  border-collapse: collapse;
+  border: 1px solid grey;
+}
+th, td {
+  border: 1px solid grey;
+}
+
 
 .pin {
   width: 20px;
@@ -17,40 +26,43 @@ body {
   background-color: red;
 }
 
-table {
-  border-collapse: collapse;
+table.punchcard {
+  font-size: 12px;
 }
-th {
+table.punchcard th, table.punchcard td {
   font-weight: normal;
+  border: none;
 }
 
-thead div.build-id {
+table.punchcard thead div.build-id {
   transform: rotate(-90deg);
   transform-origin: 5px 2px 0;
   text-align: left;
   width: 0;
 }
-thead a {
+table.punchcard thead a {
   text-decoration: none;
 }
-thead a:hover {
+table.punchcard thead a:hover {
   text-decoration: underline;
 }
-thead a.success {
+table.punchcard thead a.success {
   color: green;
 }
-thead a.failure {
+table.punchcard thead a.failure {
   color: red;
 }
-thead a.aborted {
+table.punchcard thead a.aborted {
   color: #d4d4d4;
 }
 
-tbody th {
+table.punchcard tbody th {
   text-align: right;
   padding-right: 10px;
 }
 
-tbody tr:hover td, tbody tr:hover th {
+table.punchcard tbody tr:hover td, table.punchcard tbody tr:hover th {
   background: #f1f1f1;
 }
+
+
